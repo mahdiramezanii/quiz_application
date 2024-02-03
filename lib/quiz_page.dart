@@ -20,7 +20,7 @@ class _QuizPageState extends State<QuizPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: getAppBar(),
+      appBar: getAppBar(selectedQuestion+1),
       body: Column(
         children: [
           Image(
@@ -92,13 +92,13 @@ class _QuizPageState extends State<QuizPage> {
   }
 }
 
-PreferredSizeWidget getAppBar() {
+PreferredSizeWidget getAppBar(int selectedQuestion) {
   return AppBar(
     centerTitle: true,
     elevation: 0,
     iconTheme: IconThemeData(color: Colors.white, size: 25),
     title: Text(
-      "Quiz of King",
+      "${getQuestion().length} سوال ${selectedQuestion} از",
       style: TextStyle(
           color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
     ),
