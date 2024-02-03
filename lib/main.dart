@@ -10,7 +10,6 @@ class Application extends StatelessWidget {
   Widget build(BuildContext contex) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      
       home: HomePage(),
     );
   }

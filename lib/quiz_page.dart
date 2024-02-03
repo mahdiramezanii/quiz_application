@@ -1,6 +1,22 @@
-import "package:flutter/material.dart";
+import 'dart:ffi';
 
-class QuizPage extends StatelessWidget {
+import "package:flutter/material.dart";
+import 'package:quiz/constant.dart';
+import 'package:quiz/data.dart';
+import 'package:quiz/result_screan.dart';
+
+class QuizPage extends StatefulWidget {
+  @override
+  State<QuizPage> createState() => _QuizPageState();
+}
+
+class _QuizPageState extends State<QuizPage> {
+  int selectedQuestion = 0;
+  int ScorePalyer = 0;
+  bool is_finalQuestion = false;
+
+  List<Qurstion> get_question = getQuestion();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -8,42 +24,69 @@ class QuizPage extends StatelessWidget {
       body: Column(
         children: [
           Image(
-            image: AssetImage("images/1.png"),
+            image: AssetImage(get_question[selectedQuestion].imageQuestion!),
           ),
           Text(
-            "مشهورترین شعبده باز جهان کیست؟",
+            get_question[selectedQuestion].question!,
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
-          ListTile(
-            title: Text(
-              "برد پیت",
-              textAlign: TextAlign.end,
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-          ListTile(
-            title: Text(
-              "برد پیت",
-              textAlign: TextAlign.end,
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-          ListTile(
-            title: Text(
-              "برد پیت",
-              textAlign: TextAlign.end,
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
-          ListTile(
-            title: Text(
-              "برد پیت",
-              textAlign: TextAlign.end,
-              style: TextStyle(fontSize: 18),
-            ),
-          ),
+          ...List.generate(get_question.length + 1, (index) {
+            return ListTile(title: select_response(index));
+          }),
+          is_finalQuestion
+              ? ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    elevation: 5,
+                    backgroundColor: Colors.red,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context){
+
+                        return ResultScrean(score: ScorePalyer,);
+                      })
+                    );
+                  },
+                  child: Text(
+                    "مشاهده امتیاز",
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold),
+                  ),
+                )
+              : SizedBox(),
         ],
+      ),
+    );
+  }
+
+  Widget select_response(int index) {
+    return InkWell(
+      onTap: () {
+        setState(() {
+          if (index == get_question[selectedQuestion].correctIndex) {
+            print("correct");
+            ScorePalyer++;
+          } else {
+            print("!!!!");
+          }
+          if (selectedQuestion + 1 < get_question.length) {
+            selectedQuestion++;
+          } else {
+            is_finalQuestion = true;
+          }
+        });
+      },
+      child: ListTile(
+        title: Text(
+          get_question[selectedQuestion].options_question![index],
+          textAlign: TextAlign.end,
+          style: TextStyle(fontSize: 18),
+        ),
       ),
     );
   }
